@@ -4,6 +4,31 @@
 * Date
 * Your name
 **************** 
+ANALYSIS:
+How does the choice of Storage configuration (stack vs queue) affect the sequence in which paths are explored in the search algorithm? (This requires more than a "stacks are LIFOs and queues are FIFOs" answer.)
+Stack is depth first search, which means it goes through every possible path for the last element in the stack, and goes through the stack until complete. Queue is a breadth first search, which means the first element is looked at, then the second element in the queue and so on. The queue always guarantees the shortest path when found while stack does not.
+Is the total number of search states (possible paths) affected by the choice of stack or queue?
+Yes, queue guarantees the shortest possible number of paths found while stack does not because queue goes from the first possible step then the second step and so on.
+
+Is using one of the storage structures likely to find a solution in fewer steps than the other? Always?
+Using one storage solution over the other will result in the same number of steps found for a solution, both would go over the same number of steps also.
+
+Does using either of the storage structures guarantee that the first solution found will be a shortest path?
+Yes, queue guarantees that the first solution found will be the shortest path.
+
+How is memory use (the maximum number of states in Storage at one time) affected by the choice of underlying structure?
+Stack uses less memory because in depth first search the computer goes as far as it possibly can down one route, while queue uses more memory because the computer looks at every route at the same pace.
+
+
+What is the Big-O runtime order for the search algorithm?
+N because there are no nested for loops just nested if statements
+
+What does the order reflect? (Maximum size of Storage? Number of board positions? Number of paths explored? Maximum path length? Something else?)
+The search is quick and the maximum size of storage cannot exceed the board size, the number of board positions can be found instantly.
+
+What is 'n', the single primary input factor that increases the difficulty of the task?
+The amount of possible paths increases ‘n’.
+
 
 OVERVIEW:
 
