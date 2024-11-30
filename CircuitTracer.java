@@ -1,5 +1,6 @@
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Search for shortest paths between start and end points on a circuit board
@@ -26,6 +27,8 @@ public class CircuitTracer {
 	private void printUsage() {
 		//TODO: print out clear usage instructions when there are problems with
 		// any command line args
+		// case "-g" :
+		// 	throw new UnsupportedOperationException("Sorry, -g GUI output option is not supported at this time.");
 	}
 	
 	/** 
@@ -40,8 +43,20 @@ public class CircuitTracer {
 			printUsage();
 			return; //exit the constructor immediately
 		}
+		Storage<TraceState> stateStore;
 		//TODO: initialize the Storage to use either a stack or queue
+		if(args[0] == "-s") {
+			stateStore = new Storage<TraceState>(Storage.DataStructure.stack);
+		}
+		if(args[0] == "-q") {
+			stateStore = new Storage<TraceState>(Storage.DataStructure.queue);
+		}
+
+		List<TraceState> bestPaths = new ArrayList<>();
+
+		TraceState object = stateStore.retrieve();
 		//TODO: read in the CircuitBoard from the given file
+
 		//TODO: run the search for best paths
 		//TODO: output results to console or GUI, according to specified choice
 	}

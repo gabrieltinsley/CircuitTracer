@@ -44,14 +44,32 @@ public class CircuitBoard {
 	 */
 	public CircuitBoard(String filename) throws FileNotFoundException {
 		Scanner fileScan = new Scanner(new File(filename));
-		
+
+		int rowSize = 0;
+		int colSize = 0;
+
+		try {
+			rowSize = Integer.parseInt(fileScan.next());
+			colSize = Integer.parseInt(fileScan.nextLine());
+		} catch (InvalidFileFormatException e) {
+			e.printStackTrace();
+		}
 		//TODO: parse the given file to populate the char[][]
 		// throw FileNotFoundException if Scanner cannot read the file
 		// throw InvalidFileFormatException if any issues are encountered while parsing the file
 		
-		ROWS = 0; //replace with initialization statements using values from file
-		COLS = 0;
+		ROWS = rowSize; //replace with initialization statements using values from file
+		COLS = colSize;
+
 		
+		while(fileScan.hasNext()) {
+			for(int i = 0; i < ROWS; i++) {
+				for(int j = 0; j < COLS; j++) {
+
+				}
+			}
+		}
+
 		fileScan.close();
 	}
 	
