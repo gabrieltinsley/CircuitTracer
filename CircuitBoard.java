@@ -6,7 +6,7 @@ import java.util.Scanner;
 /**
  * Represents a 2D circuit board as read from an input file.
  *  
- * @author mvail
+ * @author Gabriel Tinsley
  */
 public class CircuitBoard {
 	/** current contents of the board */
@@ -45,30 +45,77 @@ public class CircuitBoard {
 	public CircuitBoard(String filename) throws FileNotFoundException {
 		Scanner fileScan = new Scanner(new File(filename));
 
-		int rowSize = 0;
-		int colSize = 0;
+		String top = fileScan.nextLine();
 
-		try {
-			rowSize = Integer.parseInt(fileScan.next());
-			colSize = Integer.parseInt(fileScan.nextLine());
-		} catch (InvalidFileFormatException e) {
-			e.printStackTrace();
-		}
+		Scanner firstLine = new Scanner(top);
+
 		//TODO: parse the given file to populate the char[][]
 		// throw FileNotFoundException if Scanner cannot read the file
 		// throw InvalidFileFormatException if any issues are encountered while parsing the file
-		
-		ROWS = rowSize; //replace with initialization statements using values from file
-		COLS = colSize;
 
-		
-		while(fileScan.hasNext()) {
-			for(int i = 0; i < ROWS; i++) {
-				for(int j = 0; j < COLS; j++) {
+		if(firstLine.hasNextInt()) {
+			ROWS = firstLine.nextInt(); //replace with initialization statements using values from file
+		} else {
+			firstLine.close();
+			fileScan.close();
+			throw new InvalidFileFormatException("Rows need to be an integer");
+		}
 
+		if(firstLine.hasNextInt()) {
+			COLS = firstLine.nextInt();
+		} else {
+			firstLine.close();
+			fileScan.close();
+			throw new InvalidFileFormatException("Cols need to be an integer");
+		}
+
+		if(firstLine.hasNextInt()) {
+			firstLine.close();
+			fileScan.close();
+			throw new InvalidFileFormatException("Two integers please, first is Row, second is Col");
+		}
+		firstLine.close();
+
+		String body = fileScan.nextLine();
+		Scanner bodyScan = new Scanner(body);
+
+		boolean foundStart = false;
+		boolean	foundEnd = false;
+
+		for(int rowCount = 0; rowCount < ROWS; rowCount++) {
+			for(int colCount = 0; colCount < COLS; colCount++) {
+				switch (bodyScan.next().charAt(colCount)) {
+					case START:
+						if(!foundStart) {
+							startingPoint = new Point(rowCount, colCount);
+							foundStart = true;
+						} 
+						break;
+					case END:
+						if(!foundEnd) {
+							endingPoint = new Point(rowCount, colCount);
+							foundEnd = true;
+						}
+						break;
+					case OPEN:
+						break;
+					case CLOSED:
+						break;
+					case TRACE:
+						break;
+					default:
+						bodyScan.close();
+						fileScan.close();
+						throw new InvalidFileFormatException("Please make file valid");
 				}
+
+				board[rowCount][colCount] = charAt(rowCount, colCount);
+				bodyScan.close();
 			}
 		}
+
+
+
 
 		fileScan.close();
 	}

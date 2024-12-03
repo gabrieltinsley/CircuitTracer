@@ -54,7 +54,7 @@ public class CircuitTracer {
 
 		List<TraceState> bestPaths = new ArrayList<>();
 
-		TraceState object = stateStore.retrieve();
+		//TraceState object = stateStore.retrieve();
 		//TODO: read in the CircuitBoard from the given file
 
 		//TODO: run the search for best paths
