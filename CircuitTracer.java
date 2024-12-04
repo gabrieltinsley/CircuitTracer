@@ -55,6 +55,7 @@ public class CircuitTracer {
 		List<TraceState> bestPaths = new ArrayList<>();
 
 		//use if statements to check every possible direction for TraceState objects
+		
 
 		//TraceState object = stateStore.retrieve();
 		//TODO: read in the CircuitBoard from the given file

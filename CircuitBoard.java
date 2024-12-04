@@ -80,7 +80,7 @@ public class CircuitBoard {
                 }
 
                 for (int col = 0; col < COLS; col++) {
-                    char currentChar = line.charAt(col);
+                    char currentChar = lineDimensions.charAt(col);
                     if (ALLOWED_CHARS.indexOf(currentChar) == -1) {
                         throw new InvalidFileFormatException("Invalid character '" + currentChar + "' at (" + row + ", " + col + ").");
                     }
@@ -121,106 +121,15 @@ public class CircuitBoard {
             if (!foundStart || !foundEnd) {
                 throw new InvalidFileFormatException("Missing start ('1') or end ('2') points.");
             }
+
+			if(fileScan.hasNextLine()) {
+				throw new InvalidFileFormatException("Too many rows in the file.");
+			}
+
+			fileScan.close();
+
         }
     }
-		// Scanner fileScan = new Scanner(new File(filename));
-
-		// String top = fileScan.nextLine().trim();
-
-		// Scanner firstLine = new Scanner(top);
-
-		// //TODO: parse the given file to populate the char[][]
-		// // throw FileNotFoundException if Scanner cannot read the file
-		// // throw InvalidFileFormatException if any issues are encountered while parsing the file
-
-		// //Checks if the first value for number of rows is an integer
-		// if(firstLine.hasNextInt()) {
-		// 	ROWS = firstLine.nextInt(); //replace with initialization statements using values from file
-		// } else {
-		// 	firstLine.close();
-		// 	fileScan.close();
-		// 	throw new InvalidFileFormatException("Rows need to be an integer");
-		// }
-
-		// //Checks if the second value for number of columns is an integer
-		// if(firstLine.hasNextInt()) {
-		// 	COLS = firstLine.nextInt();
-		// 	if(firstLine.hasNext()) {
-		// 		firstLine.close();
-		// 		fileScan.close();
-		// 		throw new InvalidFileFormatException("Too many values for number of rows and columns, expected two");
-		// 	}
-		// } else if(firstLine.hasNext()){
-		// 	firstLine.close();
-		// 	fileScan.close();
-		// 	throw new InvalidFileFormatException("Cols need to be an integer");
-		// } else {
-		// 	firstLine.close();
-		// 	fileScan.close();
-		// 	throw new InvalidFileFormatException("Two integers please, first is Row, second is Columns");
-		// }
-
-		// firstLine.close();
-
-		// boolean foundStart = false;
-		// boolean	foundEnd = false;
-
-		// for(int rowCount = 0; rowCount < ROWS; rowCount++) {
-		// 	if(!fileScan.hasNextLine()) {
-		// 		fileScan.close();
-		// 		throw new InvalidFileFormatException("Not enough rows");
-		// 	}
-
-		// 	String body = fileScan.nextLine();
-		// 	Scanner bodyScanner = new Scanner(body);
-			
-		// 	for(int colCount = 0; colCount < COLS; colCount++) {
-
-		// 		char currentChar = body.charAt(colCount);
-
-		// 		if(!bodyScanner.hasNext()) {
-		// 			bodyScanner.close();
-		// 			fileScan.close();
-		// 			throw new InvalidFileFormatException("Not enough columns in row" + rowCount);
-		// 		} 
-
-		// 		if(ALLOWED_CHARS.indexOf(currentChar) == -1) {
-		// 			bodyScanner.close();
-		// 			fileScan.close();
-		// 			throw new InvalidFileFormatException("Only OXT12 are allowed");
-		// 		}
-
-		// 		switch (bodyScanner.next().charAt(colCount)) {
-		// 			case START:
-		// 				if(!foundStart) {
-		// 					startingPoint = new Point(rowCount, colCount);
-		// 					foundStart = true;
-		// 				} 
-		// 				break;
-		// 			case END:
-		// 				if(!foundEnd) {
-		// 					endingPoint = new Point(rowCount, colCount);
-		// 					foundEnd = true;
-		// 				}
-		// 				break;
-		// 			case OPEN:
-		// 				break;
-		// 			case CLOSED:
-		// 				break;
-		// 			case TRACE:
-		// 				break;
-		// 			default:
-		// 				bodyScanner.close();
-		// 				fileScan.close();
-		// 				throw new InvalidFileFormatException("Please make file valid");
-		// 		}
-
-		// 		board[rowCount][colCount] = charAt(rowCount, colCount);
-		// 		// bodyScan.close();
-		// 	}
-		// 	bodyScanner.close();
-		// }
-		// fileScan.close();
 	
 	/** Copy constructor - duplicates original board
 	 * 
