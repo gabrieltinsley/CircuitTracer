@@ -42,83 +42,185 @@ public class CircuitBoard {
 	 * @throws FileNotFoundException if Scanner cannot open or read the file
 	 * @throws InvalidFileFormatException for any file formatting or content issue
 	 */
-	public CircuitBoard(String filename) throws FileNotFoundException {
-		Scanner fileScan = new Scanner(new File(filename));
+	public CircuitBoard(String filename) throws FileNotFoundException, InvalidFileFormatException {
+		try (Scanner fileScan = new Scanner(new File(filename))) {
 
-		String top = fileScan.nextLine();
+            // Parse first line for ROWS and COLS
+            if (!fileScan.hasNextLine()) {
+                throw new InvalidFileFormatException("File is empty.");
+            }
+            String top = fileScan.nextLine().trim();
+            String[] dimensions = top.split("\\s+");
+            if (dimensions.length != 2) {
+                throw new InvalidFileFormatException("First line must contain exactly two integers (rows and cols).");
+            }
 
-		Scanner firstLine = new Scanner(top);
+            try {
+                ROWS = Integer.parseInt(dimensions[0]);
+                COLS = Integer.parseInt(dimensions[1]);
+            } catch (NumberFormatException e) {
+                throw new InvalidFileFormatException("Rows and columns must be integers.");
+            }
 
-		//TODO: parse the given file to populate the char[][]
-		// throw FileNotFoundException if Scanner cannot read the file
-		// throw InvalidFileFormatException if any issues are encountered while parsing the file
+            board = new char[ROWS][COLS];
 
-		if(firstLine.hasNextInt()) {
-			ROWS = firstLine.nextInt(); //replace with initialization statements using values from file
-		} else {
-			firstLine.close();
-			fileScan.close();
-			throw new InvalidFileFormatException("Rows need to be an integer");
-		}
+            boolean foundStart = false;
+            boolean foundEnd = false;
 
-		if(firstLine.hasNextInt()) {
-			COLS = firstLine.nextInt();
-		} else {
-			firstLine.close();
-			fileScan.close();
-			throw new InvalidFileFormatException("Cols need to be an integer");
-		}
+            // Parse subsequent lines for board data
+            for (int row = 0; row < ROWS; row++) {
+                if (!fileScan.hasNextLine()) {
+                    throw new InvalidFileFormatException("Not enough rows in the file.");
+                }
 
-		if(firstLine.hasNextInt()) {
-			firstLine.close();
-			fileScan.close();
-			throw new InvalidFileFormatException("Two integers please, first is Row, second is Col");
-		}
-		firstLine.close();
+                String line = fileScan.nextLine().trim();
+				String lineDimensions = line.replaceAll("\\s+", "");
+                if (lineDimensions.length() != COLS) {
+                    throw new InvalidFileFormatException("Row " + row + " does not have exactly " + COLS + " columns.");
+                }
 
-		String body = fileScan.nextLine();
-		Scanner bodyScan = new Scanner(body);
+                for (int col = 0; col < COLS; col++) {
+                    char currentChar = line.charAt(col);
+                    if (ALLOWED_CHARS.indexOf(currentChar) == -1) {
+                        throw new InvalidFileFormatException("Invalid character '" + currentChar + "' at (" + row + ", " + col + ").");
+                    }
 
-		boolean foundStart = false;
-		boolean	foundEnd = false;
+                    board[row][col] = currentChar;
 
-		for(int rowCount = 0; rowCount < ROWS; rowCount++) {
-			for(int colCount = 0; colCount < COLS; colCount++) {
-				switch (bodyScan.next().charAt(colCount)) {
-					case START:
-						if(!foundStart) {
-							startingPoint = new Point(rowCount, colCount);
-							foundStart = true;
-						} 
-						break;
-					case END:
-						if(!foundEnd) {
-							endingPoint = new Point(rowCount, colCount);
-							foundEnd = true;
-						}
-						break;
-					case OPEN:
-						break;
-					case CLOSED:
-						break;
-					case TRACE:
-						break;
-					default:
-						bodyScan.close();
-						fileScan.close();
-						throw new InvalidFileFormatException("Please make file valid");
-				}
+                    // Check for START and END
+                    switch (currentChar) {
+                        case START:
+                            if (foundStart) {
+                                throw new InvalidFileFormatException("Multiple '1' start points found.");
+                            }
+                            startingPoint = new Point(row, col);
+                            foundStart = true;
+                            break;
 
-				board[rowCount][colCount] = charAt(rowCount, colCount);
-				bodyScan.close();
-			}
-		}
+                        case END:
+                            if (foundEnd) {
+                                throw new InvalidFileFormatException("Multiple '2' end points found.");
+                            }
+                            endingPoint = new Point(row, col);
+                            foundEnd = true;
+                            break;
 
+                        case OPEN:
+                        case CLOSED:
+                        case TRACE:
+                            // Valid, but no special handling needed
+                            break;
 
+                        default:
+                            // Should not reach here due to ALLOWED_CHARS check
+                            throw new InvalidFileFormatException("Unexpected character encountered.");
+                    }
+                }
+            }
 
+            if (!foundStart || !foundEnd) {
+                throw new InvalidFileFormatException("Missing start ('1') or end ('2') points.");
+            }
+        }
+    }
+		// Scanner fileScan = new Scanner(new File(filename));
 
-		fileScan.close();
-	}
+		// String top = fileScan.nextLine().trim();
+
+		// Scanner firstLine = new Scanner(top);
+
+		// //TODO: parse the given file to populate the char[][]
+		// // throw FileNotFoundException if Scanner cannot read the file
+		// // throw InvalidFileFormatException if any issues are encountered while parsing the file
+
+		// //Checks if the first value for number of rows is an integer
+		// if(firstLine.hasNextInt()) {
+		// 	ROWS = firstLine.nextInt(); //replace with initialization statements using values from file
+		// } else {
+		// 	firstLine.close();
+		// 	fileScan.close();
+		// 	throw new InvalidFileFormatException("Rows need to be an integer");
+		// }
+
+		// //Checks if the second value for number of columns is an integer
+		// if(firstLine.hasNextInt()) {
+		// 	COLS = firstLine.nextInt();
+		// 	if(firstLine.hasNext()) {
+		// 		firstLine.close();
+		// 		fileScan.close();
+		// 		throw new InvalidFileFormatException("Too many values for number of rows and columns, expected two");
+		// 	}
+		// } else if(firstLine.hasNext()){
+		// 	firstLine.close();
+		// 	fileScan.close();
+		// 	throw new InvalidFileFormatException("Cols need to be an integer");
+		// } else {
+		// 	firstLine.close();
+		// 	fileScan.close();
+		// 	throw new InvalidFileFormatException("Two integers please, first is Row, second is Columns");
+		// }
+
+		// firstLine.close();
+
+		// boolean foundStart = false;
+		// boolean	foundEnd = false;
+
+		// for(int rowCount = 0; rowCount < ROWS; rowCount++) {
+		// 	if(!fileScan.hasNextLine()) {
+		// 		fileScan.close();
+		// 		throw new InvalidFileFormatException("Not enough rows");
+		// 	}
+
+		// 	String body = fileScan.nextLine();
+		// 	Scanner bodyScanner = new Scanner(body);
+			
+		// 	for(int colCount = 0; colCount < COLS; colCount++) {
+
+		// 		char currentChar = body.charAt(colCount);
+
+		// 		if(!bodyScanner.hasNext()) {
+		// 			bodyScanner.close();
+		// 			fileScan.close();
+		// 			throw new InvalidFileFormatException("Not enough columns in row" + rowCount);
+		// 		} 
+
+		// 		if(ALLOWED_CHARS.indexOf(currentChar) == -1) {
+		// 			bodyScanner.close();
+		// 			fileScan.close();
+		// 			throw new InvalidFileFormatException("Only OXT12 are allowed");
+		// 		}
+
+		// 		switch (bodyScanner.next().charAt(colCount)) {
+		// 			case START:
+		// 				if(!foundStart) {
+		// 					startingPoint = new Point(rowCount, colCount);
+		// 					foundStart = true;
+		// 				} 
+		// 				break;
+		// 			case END:
+		// 				if(!foundEnd) {
+		// 					endingPoint = new Point(rowCount, colCount);
+		// 					foundEnd = true;
+		// 				}
+		// 				break;
+		// 			case OPEN:
+		// 				break;
+		// 			case CLOSED:
+		// 				break;
+		// 			case TRACE:
+		// 				break;
+		// 			default:
+		// 				bodyScanner.close();
+		// 				fileScan.close();
+		// 				throw new InvalidFileFormatException("Please make file valid");
+		// 		}
+
+		// 		board[rowCount][colCount] = charAt(rowCount, colCount);
+		// 		// bodyScan.close();
+		// 	}
+		// 	bodyScanner.close();
+		// }
+		// fileScan.close();
 	
 	/** Copy constructor - duplicates original board
 	 * 
