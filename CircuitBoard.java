@@ -42,16 +42,18 @@ public class CircuitBoard {
 	 * @throws FileNotFoundException if Scanner cannot open or read the file
 	 * @throws InvalidFileFormatException for any file formatting or content issue
 	 */
-	public CircuitBoard(String filename) throws FileNotFoundException, InvalidFileFormatException {
-		try (Scanner fileScan = new Scanner(new File(filename))) {
+	public CircuitBoard(String filename) throws FileNotFoundException {
+			Scanner fileScan = new Scanner(new File(filename));
 
             // Parse first line for ROWS and COLS
             if (!fileScan.hasNextLine()) {
+				fileScan.close();
                 throw new InvalidFileFormatException("File is empty.");
             }
             String top = fileScan.nextLine().trim();
             String[] dimensions = top.split("\\s+");
             if (dimensions.length != 2) {
+				fileScan.close();
                 throw new InvalidFileFormatException("First line must contain exactly two integers (rows and cols).");
             }
 
@@ -59,6 +61,7 @@ public class CircuitBoard {
                 ROWS = Integer.parseInt(dimensions[0]);
                 COLS = Integer.parseInt(dimensions[1]);
             } catch (NumberFormatException e) {
+				fileScan.close();
                 throw new InvalidFileFormatException("Rows and columns must be integers.");
             }
 
@@ -70,18 +73,21 @@ public class CircuitBoard {
             // Parse subsequent lines for board data
             for (int row = 0; row < ROWS; row++) {
                 if (!fileScan.hasNextLine()) {
+					fileScan.close();
                     throw new InvalidFileFormatException("Not enough rows in the file.");
                 }
 
                 String line = fileScan.nextLine().trim();
 				String lineDimensions = line.replaceAll("\\s+", "");
                 if (lineDimensions.length() != COLS) {
+					fileScan.close();
                     throw new InvalidFileFormatException("Row " + row + " does not have exactly " + COLS + " columns.");
                 }
 
                 for (int col = 0; col < COLS; col++) {
                     char currentChar = lineDimensions.charAt(col);
                     if (ALLOWED_CHARS.indexOf(currentChar) == -1) {
+						fileScan.close();
                         throw new InvalidFileFormatException("Invalid character '" + currentChar + "' at (" + row + ", " + col + ").");
                     }
 
@@ -119,15 +125,16 @@ public class CircuitBoard {
             }
 
             if (!foundStart || !foundEnd) {
+				fileScan.close();
                 throw new InvalidFileFormatException("Missing start ('1') or end ('2') points.");
             }
 
 			if(fileScan.hasNextLine()) {
+				fileScan.close();
 				throw new InvalidFileFormatException("Too many rows in the file.");
 			}
 			fileScan.close();
         }
-    }
 	
 	/** Copy constructor - duplicates original board
 	 * 
