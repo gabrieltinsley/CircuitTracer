@@ -1,4 +1,5 @@
 import java.awt.Point;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,8 +28,7 @@ public class CircuitTracer {
 	private void printUsage() {
 		//TODO: print out clear usage instructions when there are problems with
 		// any command line args
-		// case "-g" :
-		// 	throw new UnsupportedOperationException("Sorry, -g GUI output option is not supported at this time.");
+		System.out.println("Usage: java CircuitTracer -s|-q -c|-g <filename>");
 	}
 	
 	/** 
@@ -43,8 +43,17 @@ public class CircuitTracer {
 			printUsage();
 			return; //exit the constructor immediately
 		}
-		Storage<TraceState> stateStore;
+		if (!args[0].equals("-s") && !args[0].equals("-q")) {
+			printUsage();
+			return; //exit the constructor immediately
+		}
+		if (!args[1].equals("-c") && !args[1].equals("-g")) {
+			printUsage();
+			return; //exit the constructor immediately
+		}
+
 		//TODO: initialize the Storage to use either a stack or queue
+		Storage<TraceState> stateStore;
 		if(args[0] == "-s") {
 			stateStore = new Storage<TraceState>(Storage.DataStructure.stack);
 		}
@@ -56,11 +65,16 @@ public class CircuitTracer {
 
 		//use if statements to check every possible direction for TraceState objects
 		
-
-		//TraceState object = stateStore.retrieve();
+		
 		//TODO: read in the CircuitBoard from the given file
-
+		try{
+			CircuitBoard board = new CircuitBoard(args[2]);
+		}catch(FileNotFoundException e) {
+			System.out.println(e);
+		}
+		
 		//TODO: run the search for best paths
+		
 		//TODO: output results to console or GUI, according to specified choice
 	}
 	

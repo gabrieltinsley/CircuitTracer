@@ -125,9 +125,7 @@ public class CircuitBoard {
 			if(fileScan.hasNextLine()) {
 				throw new InvalidFileFormatException("Too many rows in the file.");
 			}
-
 			fileScan.close();
-
         }
     }
 	
