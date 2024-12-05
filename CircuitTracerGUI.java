@@ -34,13 +34,11 @@ public class CircuitTracerGUI {
     }
     
     private class SolutionButtonActionListener implements ActionListener {
-
         @Override
         public void actionPerformed(ActionEvent e) {
            JButton b = (JButton) e.getSource();
            textArea.setText(paths.get(Integer.parseInt(b.getName())).getBoard().toString());
         }
-        
     }
 }
 
