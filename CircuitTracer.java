@@ -1,4 +1,3 @@
-
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
@@ -10,6 +9,7 @@ import java.util.ArrayList;
  * a GUI according to options specified via command-line arguments.
  * 
  * @author mvail
+ * @author Gabriel Tinsley
  */
 public class CircuitTracer {
 
@@ -28,7 +28,10 @@ public class CircuitTracer {
 	private void printUsage() {
 		//TODO: print out clear usage instructions when there are problems with
 		// any command line args
-		System.out.println("Usage: java CircuitTracer -s|-q -c|-g <filename>");
+		System.out.println("Usage: java CircuitTracer storageChoice displayChoice inputFile \n" + //
+						"\twhere storageChoice is either -s for a stack or -q for a queue,\n" + //
+						"\tdisplayChoice is either -c for console-only output or -g for GUI output,\n" + //
+						"\tand inputFile is the name of a file containing a layout to complete.");
 	}
 	
 	/** 
@@ -56,11 +59,17 @@ public class CircuitTracer {
 
 		//TODO: initialize the Storage to use either a stack or queue
 		Storage<TraceState> stateStore = null;
-		if(args[0] == "-s") {
-			stateStore = new Storage<TraceState>(Storage.DataStructure.stack);
-		}
-		if(args[0] == "-q") {
-			stateStore = new Storage<TraceState>(Storage.DataStructure.queue);
+		
+		switch(args[0]) {
+			case "-s":
+				stateStore = Storage.getStackInstance();
+				break;
+			case "-q":
+				stateStore = Storage.getQueueInstance();
+				break;
+			default:
+				printUsage();
+				return;
 		}
 
 		
@@ -68,7 +77,10 @@ public class CircuitTracer {
 		//TODO: read in the CircuitBoard from the given file
 		try{
 			board = new CircuitBoard(args[2]);
-		}catch(FileNotFoundException e) {
+		} catch(FileNotFoundException e) {
+			System.out.println(e);
+			return;
+		} catch(InvalidFileFormatException e) {
 			System.out.println(e);
 			return;
 		}
@@ -116,32 +128,37 @@ public class CircuitTracer {
 				x = currState.getRow();
 				y = currState.getCol();
 
-				if(board.isOpen(x-1, y)) {
+				if(currState.isOpen(x-1, y)) {
 					stateStore.store(new TraceState(currState, x-1, y));
 				}
 
-				if(board.isOpen(x+1, y)) {
+				if(currState.isOpen(x+1, y)) {
 					stateStore.store(new TraceState(currState, x+1, y));
 				}
 
-				if(board.isOpen(x, y-1)) {
+				if(currState.isOpen(x, y-1)) {
 					stateStore.store(new TraceState(currState, x, y-1));
 				}
 
-				if(board.isOpen(x, y+1)) {
+				if(currState.isOpen(x, y+1)) {
 					stateStore.store(new TraceState(currState, x, y+1));
 				}
 			}
 		}
 		//TODO: output results to console or GUI, according to specified choice
-		if(args[1] == "-c") {
-			for(TraceState path : bestPaths) {
-				System.out.println(path.getBoard().toString());
-			}
-		}
-
-		if(args[1] == "-g") {
-			System.out.println("GUI output not yet implemented");
+		switch (args[1]) {
+			case "-c":
+				for (TraceState path : bestPaths) {
+					System.out.println(path.getBoard().toString());
+				}
+				break;
+			case "-g":
+				// Initialize GUI with CircuitBoard and best paths
+				System.out.println("GUI not yet implemented.");
+				break;
+			default:
+				printUsage();
+				return;
 		}
 	}
 	
