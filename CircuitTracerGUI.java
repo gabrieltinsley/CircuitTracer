@@ -8,9 +8,18 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
+/**
+ * A GUI for displaying CircuitTracer solutions.
+ * @author Gabriel Tinsley
+ */
 public class CircuitTracerGUI {
     private JTextArea textArea;
     private ArrayList<TraceState> paths;
+
+    /**
+     * Create a new CircuitTracerGUI with the given paths.
+     * @param paths the paths to display
+     */
     public CircuitTracerGUI(ArrayList<TraceState> paths) {
         this.paths = paths;
         JFrame frame = new JFrame("Circuit Tracer");
@@ -33,6 +42,9 @@ public class CircuitTracerGUI {
         frame.setVisible(true);
     }
     
+    /**
+     * ActionListener for the solution buttons.
+     */
     private class SolutionButtonActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
