@@ -41,15 +41,15 @@ public class CircuitTracer {
 	public CircuitTracer(String[] args) {
 		if (args.length != 3) {
 			printUsage();
-			return; 
+			return;
 		}
 		if (!args[0].equals("-s") && !args[0].equals("-q")) {
 			printUsage();
-			return; 
+			return;
 		}
 		if (!args[1].equals("-c") && !args[1].equals("-g")) {
 			printUsage();
-			return; 
+			return;
 		}
 
 		Storage<TraceState> stateStore = null;

@@ -11,17 +11,21 @@ import javax.swing.JPanel;
 
 /**
  * A GUI for displaying CircuitTracer solutions.
+ * 
  * @author Gabriel Tinsley
  */
 public class CircuitTracerGUI {
-    private JButton[][] buttons; 
+    private JButton[][] buttons;
     private ArrayList<TraceState> paths;
     private int rows;
     private int cols;
 
     /**
      * Create a new CircuitTracerGUI with the given paths.
+     * 
      * @param paths the paths to display
+     * @param rows  the number of rows in the circuit board
+     * @param cols  the number of columns in the circuit board
      */
     public CircuitTracerGUI(ArrayList<TraceState> paths, int rows, int cols) {
         this.paths = paths;
@@ -75,7 +79,7 @@ public class CircuitTracerGUI {
             CircuitBoard board = path.getBoard();
             for (int row = 0; row < rows; row++) {
                 for (int col = 0; col < cols; col++) {
-                    if(board.charAt(row, col) == 'T') {
+                    if (board.charAt(row, col) == 'T') {
                         buttons[row][col].setForeground(Color.RED);
                         buttons[row][col].setText(board.charAt(row, col) + "");
                         buttons[row][col].setFont(new Font("Arial", Font.BOLD, 20));
@@ -89,4 +93,3 @@ public class CircuitTracerGUI {
         }
     }
 }
-

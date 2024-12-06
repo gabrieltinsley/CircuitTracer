@@ -10,7 +10,7 @@ ANALYSIS:
 
 How does the choice of Storage configuration (stack vs queue) affect the sequence in which paths are explored in the search algorithm? (This requires more than a "stacks are LIFOs and queues are FIFOs" answer.)
 
-Stack is depth first search, which means it goes through every possible path for the last element in the stack, and goes through the stack until complete. Queue is a breadth first search, which means the first element is looked at, then the second element in the queue and so on. The queue always guarantees the shortest path when found while stack does not.
+Stack is depth first search, which means it goes through every possible path for the last element in the stack, and goes through the stack until complete. Queue is a breadth first search, which means the first element is looked at, then the second element in the queue and so on.
 
 Is the total number of search states (possible paths) affected by the choice of stack or queue?
 
