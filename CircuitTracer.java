@@ -148,7 +148,7 @@ public class CircuitTracer {
 				}
 				break;
 			case "-g":
-				new CircuitTracerGUI(bestPaths);
+				new CircuitTracerGUI(bestPaths, board.numRows(), board.numCols());
 				break;
 			default:
 				printUsage();
